@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
+import isoDate from '../lib/date';
 
 const GET_PLAN = gql`
 query GetPlan($today: date) {
@@ -19,7 +20,7 @@ query GetPlan($today: date) {
 `;
 
 const Plan = () => {
-  const { loading, error, data } = useQuery(GET_PLAN, { variables: { today: '2020-07-09'} });
+  const { loading, error, data } = useQuery(GET_PLAN, { variables: { today: isoDate() } });
   if (loading) {
     return <div>Loading</div>;
   }
