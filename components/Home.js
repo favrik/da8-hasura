@@ -1,6 +1,8 @@
 import { useQuery } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
 import isoDate from '../lib/date';
+import HandleQuery from './HandleQuery';
+import Today from './Today';
 
 const GET_PLAN = gql`
 query GetPlan($today: date) {
@@ -19,20 +21,14 @@ query GetPlan($today: date) {
 }
 `;
 
-const Plan = () => {
+const Home = () => {
   const { loading, error, data } = useQuery(GET_PLAN, { variables: { today: isoDate() } });
-  if (loading) {
-    return <div>Loading</div>;
-  }
 
-  if (error) {
-    console.log(error);
-    return <div>Error</div>;
-  }
-
-
-
-  return <div>{JSON.stringify(data)}</div>
+  return (
+    <HandleQuery loading={loading} error={error}>
+      <Today data={data} />
+    </HandleQuery>
+  );
 };
 
-export default Plan;
+export default Home;

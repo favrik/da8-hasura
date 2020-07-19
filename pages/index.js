@@ -1,11 +1,8 @@
-import Layout from '../components/Layout';
-import Plan from '../components/Plan';
+import Home from '../components/Home';
 
-export default function Home() {
+export default function Index() {
 
   return (
-    <Layout>
-      <Plan />
-    </Layout>
+    <Home />
   );
 };
