@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-const Today = ({ data }) => {
-  const [tasks, setTasks] = useState({ a: [], b: [], c: []});
-  const [level, setLevel] = useState('a');
+const formatData = (data) => {
+  return data.reduce((acc, task) => {
+    acc[task.level].push(task);
+    return acc;
+  }, {a: [], b: [], c: []});
+};
 
+const Today = ({ data }) => {
+  const [tasks, setTasks] = useState(formatData(data.plans[0].tasks));
+  const [level, setLevel] = useState('a');
+  const planId = data.plans[0].id;
+
+  console.log(tasks);
   const handleLevelChange = (event) => {
     setLevel(event.target.value);
   };
@@ -22,17 +31,19 @@ const Today = ({ data }) => {
     }
   };
 
-  const addTask = (value) => {
-    if (validTask(value)) {
-      const newTask = { [level]: [...tasks[level], value] };
+  const addTask = (description) => {
+    if (validTask(description)) {
+      const submittedTask = { description, level, plan_id: planId };
+      const newTask = { [level]: [...tasks[level], submittedTask] };
+
       setTasks({...tasks, ...newTask });
     }
   };
 
   const validTask = (value) => (value !== '');
 
-  const tasksByLevel = (level) => {
-    return tasks[level].map((item, index) => <li key={index}>{item}</li>)
+  const tasksByLevel = (items) => {
+    return items.map((item, index) => <li key={index}>{item.description}</li>)
   };
 
   return (
@@ -46,15 +57,15 @@ const Today = ({ data }) => {
       <input type="text" onKeyDown={handleInput} name="todo" />
       <ul>
         <li><h2>A</h2></li>
-        {tasksByLevel('a')}
+        {tasksByLevel(tasks.a)}
       </ul>
       <ul>
         <li><h2>B</h2></li>
-        {tasksByLevel('b')}
+        {tasksByLevel(tasks.b)}
       </ul>
       <ul>
         <li><h2>C</h2></li>
-        {tasksByLevel('c')}
+        {tasksByLevel(tasks.c)}
       </ul>
     </div>
   );
