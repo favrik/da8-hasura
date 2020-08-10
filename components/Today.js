@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import addTaskMutation from '../graphql/AddTask';
 
 const formatData = (data) => {
   return data.reduce((acc, task) => {
@@ -7,10 +8,12 @@ const formatData = (data) => {
   }, {a: [], b: [], c: []});
 };
 
-const Today = ({ data }) => {
-  const [tasks, setTasks] = useState(formatData(data.plans[0].tasks));
+const Today = ({ initialPlan }) => {
+  console.log(initialPlan);
+  const [tasks, setTasks] = useState(formatData(initialPlan.plans[0].tasks));
   const [level, setLevel] = useState('a');
-  const planId = data.plans[0].id;
+  const planId = initialPlan.plans[0].id;
+  const [mutateTask, { data, loading, error }] = addTaskMutation();
 
   console.log(tasks);
   const handleLevelChange = (event) => {
@@ -35,6 +38,8 @@ const Today = ({ data }) => {
     if (validTask(description)) {
       const submittedTask = { description, level, plan_id: planId };
       const newTask = { [level]: [...tasks[level], submittedTask] };
+
+      mutateTask({ variables: submittedTask });
 
       setTasks({...tasks, ...newTask });
     }

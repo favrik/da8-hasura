@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import addPlan from '../graphql/AddPlan';
 import Today from '../components/Today';
-
+import AddPlanQuery from '../graphql/AddPlan';
+import isoDate from '../lib/date';
+import { useMutation } from "@apollo/react-hooks";
 
 const EnsurePlanExists = (props) => {
   const [plan, setPlan] = useState(props.data);
-  const [mutatePlan, {loading, data, error}] = addPlan();
-  const planExists = props.data['plans'].length > 0;
+  const [mutatePlan, { loading, data }] = useMutation(AddPlanQuery);
+  const planExists = props.data.plans.length > 0;
 
   if (planExists) {
-    return <Today data={props.data} />;
+    return <Today initialPlan={props.data} />;
   }
 
   useEffect(() => {
-    const newPlan = mutatePlan();
-    newPlan.then(response => (console.log(response)));
+    mutatePlan({ variables: { object: { today: isoDate() } } });
 
+  }, [mutatePlan]);
 
-  }, [plan]);
+  if (loading) {
+    return '<div> Loading</div>';
+  }
 
-  return (
-    <Today data={plan} />
-  );
+  if (data) {
+    const plans = { plans: [data.plans] }
+    return <Today initialPlan={plans} />;
+  }
+
+  return null;
 };
 
 export default EnsurePlanExists;

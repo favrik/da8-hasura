@@ -1,8 +1,7 @@
-import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
 import isoDate from '../lib/date';
 
-const ADD_PLAN = gql`
+const AddPlanQuery = gql`
 mutation UpsertPlan($object: plans_insert_input!) {
   plans: insert_plans_one(
     object: $object,
@@ -20,6 +19,7 @@ mutation UpsertPlan($object: plans_insert_input!) {
       id
       plan_id
       updated_at
+      level
     }
   }
 }
@@ -28,7 +28,7 @@ mutation UpsertPlan($object: plans_insert_input!) {
 const addPlan = () => {
   const variables = { variables: { object: { today: isoDate() } } };
 
-  return useMutation(ADD_PLAN, variables);
+  return useMutation(ADD_PLAN);
 };
 
-export default addPlan;
+export default AddPlanQuery;
