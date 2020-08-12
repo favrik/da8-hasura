@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Today from '../components/Today';
 import AddPlanQuery from '../graphql/AddPlan';
 import isoDate from '../lib/date';
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 
 const EnsurePlanExists = (props) => {
   const [plan, setPlan] = useState(props.data);

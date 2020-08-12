@@ -51,6 +51,11 @@ const Today = ({ initialPlan }) => {
     return items.map((item, index) => <li key={index}>{item.description}</li>)
   };
 
+
+  if (error) {
+    return 'ERROR';
+  }
+
   return (
     <div>
       <label><input type="radio" name="level" onChange={handleLevelChange} checked={level === 'a'} value='a' /> A</label>

@@ -1,5 +1,4 @@
-import { useMutation } from "@apollo/react-hooks";
-import gql from 'graphql-tag';
+import { useMutation, gql } from "@apollo/client";
 
 const ADD_TASK = gql`
 mutation AddTask($description: String!, $level: bpchar!, $plan_id: Int!) {

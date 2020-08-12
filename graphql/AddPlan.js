@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { useMutation, gql } from '@apollo/client';
 import isoDate from '../lib/date';
 
 const AddPlanQuery = gql`

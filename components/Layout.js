@@ -1,5 +1,5 @@
 import globalStyles from '../styles/global.js'
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 import createApolloClient from '../lib/apolloClient';
 
 function Layout({ children }) {
