@@ -6,7 +6,7 @@ query GetPlan($today: date) {
   plans(where: {today: {_eq: $today}}) {
     today
     id
-    tasks {
+    tasks(order_by: { id: asc }) {
       level
       completed
       created_at

@@ -15,7 +15,6 @@ const EnsurePlanExists = (props) => {
 
   useEffect(() => {
     mutatePlan({ variables: { object: { today: isoDate() } } });
-
   }, [mutatePlan]);
 
   if (loading) {

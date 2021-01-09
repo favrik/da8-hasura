@@ -1,4 +1,5 @@
 import { useMutation, gql } from "@apollo/client";
+import { GET_PLAN } from './GetPlan';
 
 const ADD_TASK = gql`
 mutation AddTask($description: String!, $level: bpchar!, $plan_id: Int!) {
@@ -14,7 +15,19 @@ mutation AddTask($description: String!, $level: bpchar!, $plan_id: Int!) {
 `;
 
 const addTask = () => useMutation(
-  ADD_TASK, { optimisticResponse: true }
+  ADD_TASK, {
+    update: (proxy, { data: { insert_tasks_one } }) => {
+      const data = proxy.readQuery({ query: GET_PLAN });
+
+      const newTasks = [ ...data.plans[0].tasks, insert_tasks_one ];
+
+      proxy.writeQuery({ query: GET_PLAN, data: {
+        plans: [
+          { ...data.plans[0], ...{ tasks: newTasks } }
+        ]
+      }});
+    }
+  }
 );
 
 export default addTask;

@@ -1,31 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import addTaskMutation from '../graphql/AddTask';
-
-const formatData = (data) => {
-  return data.reduce((acc, task) => {
-    acc[task.level].push(task);
-    return acc;
-  }, {a: [], b: [], c: []});
-};
+import updateTaskMutation, { updateTaskCache } from '../graphql/UpdateTask';
+import formatPlanData from '../lib/formatPlanData';
+import TaskLevelSelector from './TaskLevelSelector';
+import TaskDisplay from './TaskDisplay';
+import KeyboardHelper from './KeyboardHelper';
 
 const Today = ({ initialPlan }) => {
-  console.log(initialPlan);
-  const [tasks, setTasks] = useState(formatData(initialPlan.plans[0].tasks));
-  const [level, setLevel] = useState('a');
   const planId = initialPlan.plans[0].id;
+  const input = useRef(null);
+  const [tasks, setTasks] = useState(formatPlanData(initialPlan.plans[0].tasks));
+  const [level, setLevel] = useState('a');
+  const [selectedItem, setSelectedItem] = useState({ id: null });
+  const [editing, setEditing] = useState(false);
   const [mutateTask, { data, loading, error }] = addTaskMutation();
 
-  console.log(tasks);
-  const handleLevelChange = (event) => {
-    setLevel(event.target.value);
+  const [updateMutateTask, { udata, uloading, uerror }] = updateTaskMutation();
+
+  const handleLevelChange = (event) => setLevel(event.target.value);
+
+  const handleSelectedItem = (event) => {
+    const value = event.target.value;
+
+    if (event.keyCode === KeyboardHelper.f2) {
+      setEditing((previousEditing) => {
+        const newEditing = !previousEditing;
+        if (newEditing === false) {
+          input.current.focus();
+        }
+
+        return newEditing;
+      });
+    }
+
+    if ([KeyboardHelper.up, KeyboardHelper.down].includes(event.keyCode)) {
+      let task = selectedItem;
+      if (selectedItem === null) {
+        task = tasks[level][0];
+      } else {
+        const direction = event.keyCode == KeyboardHelper.down ? 1 : -1;
+        // TODO: validate index and make up arrow work in case there is only one task.
+        const index = tasks[level].findIndex((item) => item.id === selectedItem.id) + 1 * direction;
+
+        if (typeof tasks[level][index] !== 'undefined') {
+          task = tasks[level][index];
+        }
+      }
+
+      setSelectedItem(task);
+    }
   };
 
-  const handleInput = (event) => {
+  const handleNewTaskInput = (event) => {
     const value = event.target.value;
     const charCode = String.fromCharCode(event.which).toLowerCase();
 
-    if (event.ctrlKey && ['a', 'b', 'c'].includes(charCode)) {
-      setLevel(charCode);
+    if (event.ctrlKey && [KeyboardHelper.left, KeyboardHelper.right].includes(event.keyCode)) {
+      const levels = ['a', 'b', 'c']
+
+      const direction = event.keyCode == KeyboardHelper.right ? 1 : -1;
+      const currentLevelIndex = levels.findIndex((item) => item === level);
+      let nextLevelIndex = currentLevelIndex + 1 * direction
+      if (nextLevelIndex > (levels.length - 1)) {
+        nextLevelIndex = 0;
+      }
+      if (nextLevelIndex < 0) {
+        nextLevelIndex = levels.length - 1;
+      }
+
+      setLevel(levels[nextLevelIndex]);
     }
 
     if (event.key === 'Enter') {
@@ -41,42 +84,38 @@ const Today = ({ initialPlan }) => {
 
       mutateTask({ variables: submittedTask });
 
-      setTasks({...tasks, ...newTask });
+      setTasks({ ...tasks, ...newTask });
     }
   };
 
-  const validTask = (value) => (value !== '');
+  const validTask = (value) => value !== '';
 
-  const tasksByLevel = (items) => {
-    return items.map((item, index) => <li key={index}>{item.description}</li>)
-  };
+  const handleEdit = (event) => {
+    const description = event.target.value;
 
+    if (event.key === 'Enter' && validTask(description)) {
+      const submittedTask = { id: selectedItem.id, description, level, plan_id: planId };
+      const newTask = { [level]: [...tasks[level], submittedTask] };
 
-  if (error) {
+      updateMutateTask({ variables: submittedTask, update: updateTaskCache(submittedTask) });
+      setTasks({ ...tasks, ...newTask });
+      setEditing(!editing);
+    }
+  }
+
+  if (error || uerror) {
     return 'ERROR';
   }
 
   return (
-    <div>
-      <label><input type="radio" name="level" onChange={handleLevelChange} checked={level === 'a'} value='a' /> A</label>
-      <label><input type="radio" name="level" onChange={handleLevelChange} checked={level === 'b'} value='b' /> B</label>
-      <label><input type="radio" name="level" onChange={handleLevelChange} checked={level === 'c'} value='c' /> C</label>
+    <div tabIndex="0" onKeyDown={handleSelectedItem} style={{background: '#f4f4f4'}}>
+      <TaskLevelSelector handler={handleLevelChange} currentLevel={level} />
 
       <br />
 
-      <input type="text" onKeyDown={handleInput} name="todo" />
-      <ul>
-        <li><h2>A</h2></li>
-        {tasksByLevel(tasks.a)}
-      </ul>
-      <ul>
-        <li><h2>B</h2></li>
-        {tasksByLevel(tasks.b)}
-      </ul>
-      <ul>
-        <li><h2>C</h2></li>
-        {tasksByLevel(tasks.c)}
-      </ul>
+      <input ref={input} autoFocus={true} autoComplete="off" type="text" onKeyDown={handleNewTaskInput} name="todo" />
+
+      <TaskDisplay tasks={tasks} selectedItem={selectedItem} editMode={editing} handleEdit={handleEdit} />
     </div>
   );
 };

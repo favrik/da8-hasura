@@ -16,4 +16,7 @@ export default css.global`
   p {
     margin-bottom: 10px;
   }
+  li.selected {
+    border: 1px solid #000;
+  }
 `
