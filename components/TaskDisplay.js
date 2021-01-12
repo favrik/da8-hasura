@@ -27,10 +27,21 @@ const TaskDisplay = ({ selectedItem, tasks, editMode, handleEdit }) => {
   const buildTaskList = () => {
     return TASK_LEVELS.map((item, index) => {
       return (
-        <ul key={item}>
-          <li><h2>{item.toUpperCase()}</h2></li>
-          {tasksByLevel(tasks[item])}
-        </ul>
+        <div>
+          <h2>{item.toUpperCase()}</h2>
+          <ul key={item}>
+            {tasksByLevel(tasks[item])}
+          </ul>
+
+          <style jsx>{`
+            h2 {
+              font-size: 100px;
+              margin: 0;
+              padding: 0;
+              line-height: 1;
+            }
+          `}</style>
+        </div>
       );
     });
   };

@@ -10,12 +10,15 @@ export default css.global`
     color: #333;
     font-family: sans-serif;
   }
+
   h1 {
     font-weight: 700;
   }
+
   p {
     margin-bottom: 10px;
   }
+
   li.selected {
     border: 1px solid #000;
   }
