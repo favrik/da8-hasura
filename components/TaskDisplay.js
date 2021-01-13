@@ -34,11 +34,22 @@ const TaskDisplay = ({ selectedItem, tasks, editMode, handleEdit }) => {
           </ul>
 
           <style jsx>{`
+            div {
+              display: grid;
+              gap: 1px 1px;
+              grid-template-columns: 0.5fr 4fr;
+            }
+
             h2 {
+              font-family: Georgia, serif;
               font-size: 100px;
               margin: 0;
               padding: 0;
               line-height: 1;
+            }
+
+            ul {
+              margin-top: .5em;
             }
           `}</style>
         </div>

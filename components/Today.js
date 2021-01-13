@@ -50,6 +50,7 @@ const Today = ({ initialPlan }) => {
     if (keyHelper.ctrlLeftRight()) {
       const levels = DA8.levels;
       setLevel(levels[ itemNavigator(levels, level, keyHelper.right()) ]);
+      input.current.focus();
     }
   };
 
@@ -103,10 +104,14 @@ const Today = ({ initialPlan }) => {
       </div>
 
       <style jsx>{`
+        div {
+        }
         input {
           border: 0 none;
           border-bottom: 1px solid #000;
           padding: .5rem;
+          background: transparent;
+          width: 30%;
         }
 
         .task-lists {

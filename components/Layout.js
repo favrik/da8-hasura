@@ -8,6 +8,11 @@ function Layout({ children }) {
   return (
     <ApolloProvider client={client}>
     <div className="page-layout">
+      <ul className="main-menu">
+        <li><a href="/plan">Plan</a></li>
+        <li><a href="/todo">Todo</a></li>
+        <li><a href="/journal">Journal</a></li>
+      </ul>
       {children}
       <style jsx global>
         {globalStyles}

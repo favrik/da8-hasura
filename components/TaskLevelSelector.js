@@ -8,6 +8,9 @@ const TaskLevelSelector = ({ handler, currentLevel }) => {
           <input type="radio" name="level" onChange={handler} checked={currentLevel === item} value={item} /> Level <em>{item.toUpperCase()}</em>
 
           <style jsx>{`
+            label {
+              font-family: Georgia, serif;
+            }
             em {
               font-weight: bold;
             }
