@@ -94,7 +94,7 @@ const Today = ({ initialPlan }) => {
   }
 
   return (
-    <div tabIndex="0" onKeyDown={handleKeyboardShortcut} style={{background: '#f4f4f4'}}>
+    <div tabIndex="0" onKeyDown={handleKeyboardShortcut} style={{background: ''}}>
       <TaskLevelSelector handler={handleLevelChange} currentLevel={level} />
 
       <input ref={input} autoFocus={true} autoComplete="off" type="text" onKeyDown={handleNewTaskInput} name="todo" />
