@@ -1,4 +1,3 @@
-// /plan page ;)
 import HandleQuery from '../components/HandleQuery';
 import EnsurePlanExists from '../components/EnsurePlanExists';
 import getPlan from '../graphql/GetPlan';
