@@ -2,14 +2,12 @@
 import HandleQuery from '../components/HandleQuery';
 import EnsurePlanExists from '../components/EnsurePlanExists';
 import getPlan from '../graphql/GetPlan';
+import Today from '../components/Today';
+import Now from '../components/Now';
 
 
 export default function Index() {
-  const { loading, data, error } = getPlan();
-
   return (
-    <HandleQuery loading={loading} error={error}>
-      <EnsurePlanExists data={data} />
-    </HandleQuery>
+    <Now />
   );
 };
