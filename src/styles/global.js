@@ -22,4 +22,5 @@ export default css.global`
   li.selected {
     border: 1px solid #000;
   }
+  .optimistic { color: red; }
 `

@@ -1,18 +1,34 @@
 import { useCallback } from 'react';
 import { TASK_LEVELS } from './TaskLevelSelector';
 
-const TaskDisplay = ({ selectedItem, tasks, editMode, handleEdit }) => {
+const TaskDisplay = ({ tasks, selectedItem, editMode, handleEdit }) => {
+  const groupTasksByLevel = (tasks) => {
+    const byLevel = { a: [], b: [], c: [] };
+
+    for (var task of tasks) {
+      byLevel[task.level].push(task);
+    }
+
+    return byLevel;
+  };
+
+  const groupedTasks = groupTasksByLevel(tasks);
+
   const editInput = useCallback(node => {
     if (node !== null) {
       node.focus();
     }
   }, []);
 
+
   const tasksByLevel = (items) => {
     return items.map((item, index) => {
       const selectedClass = selectedItem.id === item.id ? 'selected' : '';
       const description = editingInput(editMode && selectedClass === 'selected', item.description);
-      return <li className={selectedClass} key={`${item.level}${index}`}>{item.id} {description}</li>
+      if (item.id < 0) {
+        return <li className={`optimistic ${selectedClass}`} key={`${item.level}${item.id}`}>{item.id} {description}</li>
+      }
+      return <li className={selectedClass} key={`${item.level}${item.id}`}>{item.id} {description}</li>
     });
   };
 
@@ -25,12 +41,12 @@ const TaskDisplay = ({ selectedItem, tasks, editMode, handleEdit }) => {
   };
 
   const buildTaskList = () => {
-    return TASK_LEVELS.map((item, index) => {
+    return TASK_LEVELS.map((level, index) => {
       return (
-        <div>
-          <h2>{item.toUpperCase()}</h2>
-          <ul key={item}>
-            {tasksByLevel(tasks[item])}
+        <div key={level}>
+          <h2>{level.toUpperCase()}</h2>
+          <ul>
+            {tasksByLevel(groupedTasks[level])}
           </ul>
 
           <style jsx>{`
@@ -57,7 +73,19 @@ const TaskDisplay = ({ selectedItem, tasks, editMode, handleEdit }) => {
     });
   };
 
-  return buildTaskList();
+  return (
+    <div className={"task-lists"}>
+      {buildTaskList()}
+
+      <style jsx>{`
+        .task-lists {
+          display: grid;
+          grid-gap: 1rem;
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      `}</style>
+    </div>
+  );
 }
 
 export default TaskDisplay;

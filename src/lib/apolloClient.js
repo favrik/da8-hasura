@@ -15,14 +15,15 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 const defaultOptions = {
   watchQuery: {
     fetchPolicy: 'cache-and-network',
-    errorPolicy: 'ignore',
+    nextFetchPolicy: 'cache-first',
+    errorPolicy: 'all'
   },
   query: {
     fetchPolicy: 'network-only',
-    errorPolicy: 'all',
+    errorPolicy: 'all'
   },
   mutate: {
-    errorPolicy: 'all',
+    errorPolicy: 'all'
   },
 };
 
