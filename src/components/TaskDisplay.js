@@ -25,9 +25,9 @@ const TaskDisplay = ({ tasks, selectedItem, editMode, handleEdit }) => {
       const selectedClass = selectedItem.id === item.id ? 'selected' : '';
       const description = editingInput(editMode && selectedClass === 'selected', item.description);
       if (item.id < 0) {
-        return <li className={`optimistic ${selectedClass}`} key={`${item.level}${item.id}`}>{item.id} {description}</li>
+        return <li className={`optimistic ${selectedClass}`} key={`${item.level}${item.id}`}>{description}</li>
       }
-      return <li className={selectedClass} key={`${item.level}${item.id}`}>{item.id} {description}</li>
+      return <li className={selectedClass} key={`${item.level}${item.id}`}>{description}</li>
     });
   };
 
