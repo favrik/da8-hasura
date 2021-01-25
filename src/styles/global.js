@@ -23,4 +23,16 @@ export default css.global`
     border: 1px solid #000;
   }
   .optimistic { color: red; }
+
+  .plan-date {
+    background: #000;
+    color: #fff;
+    padding: 10px 15px;
+    width: 50%;
+    line-height: 1em;
+    font-family: Georgia, serif;
+    font-size: 1.4em;
+
+  }
+
 `

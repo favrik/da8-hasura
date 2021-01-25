@@ -1,11 +1,9 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import TaskLevelSelector from './TaskLevelSelector';
 import TaskInput from './TaskInput';
 import TaskDisplay from './TaskDisplay';
+import CurrentDate from './CurrentDate';
 import KeyboardHelper from './KeyboardHelper';
 import DA8, { itemNavigator } from '../lib/DA8';
-import { useQuery } from "@apollo/client";
-import { GET_PLAN } from '../graphql/GetPlan';
 
 const Now = ({ plans }) => {
   const plan = plans && plans.length ? plans[0] : null;
@@ -27,6 +25,8 @@ const Now = ({ plans }) => {
 
   return (
     <div tabIndex="0" style={{background: ''}}>
+      <CurrentDate plan={plan} />
+
       <TaskInput plan_id={plan.id} />
 
       <TaskDisplay tasks={plan.tasks} selectedItem={selectedItem} editMode={editing} handleEdit={handleEdit} />
@@ -48,21 +48,4 @@ const Now = ({ plans }) => {
   );
 };
 
-const NowQuery = () => {
-  const { loading, error, data } = useQuery(GET_PLAN, {
-    variables: { today: '2021-01-17' }
-  });
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error || !data) {
-    console.error(error);
-    return <div>Error!</div>;
-  }
-
-  return <Now plans={data.plans} />;
-};
-
-export { Now, NowQuery as default };
+export { Now };

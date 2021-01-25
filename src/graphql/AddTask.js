@@ -1,5 +1,6 @@
 import { useMutation, gql } from "@apollo/client";
 import getPlan, { GET_PLAN, getPlanVariables} from './GetPlan';
+import isoDate from '../lib/date';
 
 const ADD_TASK = gql`
 mutation AddTask($description: String!, $level: bpchar!, $plan_id: Int!) {
@@ -34,7 +35,8 @@ const optimisticAddTask = (task) => {
 };
 
 const updateCache = (proxy, { data: { insert_tasks_one } }) => {
-  const data = proxy.readQuery({ query: GET_PLAN, variables: { today: '2021-01-17' } });
+  const currentDate = isoDate();
+  const data = proxy.readQuery({ query: GET_PLAN, variables: { today: currentDate } });
   const newTasks = [ ...data.plans[0].tasks, insert_tasks_one ];
 
   proxy.writeQuery({
@@ -44,7 +46,7 @@ const updateCache = (proxy, { data: { insert_tasks_one } }) => {
         { ...data.plans[0], ...{ tasks: newTasks } }
       ]
     },
-    variables: { today: '2021-01-17' }
+    variables: { today: currentDate }
   });
 };
 

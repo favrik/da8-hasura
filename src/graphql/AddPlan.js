@@ -1,7 +1,6 @@
-import { useMutation, gql } from '@apollo/client';
-import isoDate from '../lib/date';
+import { gql } from '@apollo/client';
 
-const AddPlanQuery = gql`
+const ADD_PLAN = gql`
 mutation UpsertPlan($object: plans_insert_input!) {
   plans: insert_plans_one(
     object: $object,
@@ -13,22 +12,16 @@ mutation UpsertPlan($object: plans_insert_input!) {
     today
     id
     tasks {
+      level
       completed
       created_at
       description
       id
       plan_id
       updated_at
-      level
     }
   }
 }
 `;
 
-const addPlan = () => {
-  const variables = { variables: { object: { today: isoDate() } } };
-
-  return useMutation(ADD_PLAN);
-};
-
-export default AddPlanQuery;
+export { ADD_PLAN as default };

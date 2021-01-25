@@ -6,12 +6,14 @@ import TaskLevelSelector from './TaskLevelSelector';
 import TaskDisplay from './TaskDisplay';
 import KeyboardHelper from './KeyboardHelper';
 import DA8, { itemNavigator } from '../lib/DA8';
+import getPlan from '../graphql/GetPlan';
 
 const Today = ({ initialPlan }) => {
-  const planId = initialPlan.plans[0].id;
-  const input = useRef(null);
 
-  const [tasks, setTasks] = useState(formatPlanData(initialPlan.plans[0].tasks));
+  const input = useRef(null);
+  const { ploading, pdata, perror } = getPlan('2021-01-17');
+
+  const [tasks, setTasks] = useState([]);
   const [level, setLevel] = useState('a');
   const [selectedItem, setSelectedItem] = useState({ id: null });
   const [editing, setEditing] = useState(false);
@@ -66,11 +68,11 @@ const Today = ({ initialPlan }) => {
   const addTask = (description) => {
     if (validTask(description)) {
       const submittedTask = { description, level, plan_id: planId };
-      const newTask = { [level]: [...tasks[level], submittedTask] };
+      //const newTask = { [level]: [...tasks[level], submittedTask] };
 
       mutateTask({ variables: submittedTask });
 
-      setTasks({ ...tasks, ...newTask });
+      //setTasks({ ...tasks, ...newTask });
     }
   };
 
@@ -89,9 +91,16 @@ const Today = ({ initialPlan }) => {
     }
   }
 
-  if (error || uerror) {
+  console.log('render');
+
+  if (ploading || loading) {
+    return 'Loading';
+  }
+  if (perror || error || uerror || !pdata) {
     return 'ERROR';
   }
+
+  const planId = pdata.plans[0].id;
 
   return (
     <div tabIndex="0" onKeyDown={handleKeyboardShortcut} style={{background: ''}}>
@@ -104,7 +113,9 @@ const Today = ({ initialPlan }) => {
       </div>
 
       <style jsx>{`
-        div {
+        div:focus {
+          border: 0 none;
+          outline: 0 none;
         }
         input {
           border: 0 none;

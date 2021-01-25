@@ -19,10 +19,13 @@ query GetPlan($today: date) {
 }
 `;
 
-const variables = () => { variables: { today: isoDate() } };
+const getPlan = (date = isoDate()) => {
+  return useQuery(
+    GET_PLAN,
+    {
+      variables: { today: date }
+    }
+  );
+};
 
-const getPlan = () => useQuery(GET_PLAN, variables);
-
-
-export { GET_PLAN, variables };
-export default getPlan;
+export { GET_PLAN, getPlan as default };

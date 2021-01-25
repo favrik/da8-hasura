@@ -1,4 +1,6 @@
-const HandleQuery = ({ loading, error, children }) => {
+const HandleQuery = ({ query, children }) => {
+  const { loading, data, error } = query;
+
   if (loading) {
     return 'Loading';
   }
@@ -7,7 +9,7 @@ const HandleQuery = ({ loading, error, children }) => {
     return 'error';
   }
 
-  return children;
+  return children(data);
 };
 
 export default HandleQuery;

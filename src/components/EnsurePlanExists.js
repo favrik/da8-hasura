@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import Today from '../components/Today';
-import AddPlanQuery from '../graphql/AddPlan';
+import React, { useEffect } from 'react';
+import ADD_PLAN from '../graphql/AddPlan';
+import getPlan from '../graphql/GetPlan';
 import isoDate from '../lib/date';
 import { useMutation } from "@apollo/client";
+import { Now } from '../components/Now';
+import HandleQuery from '../components/HandleQuery';
 
-const EnsurePlanExists = (props) => {
-  const [plan, setPlan] = useState(props.data);
-  const [mutatePlan, { loading, data }] = useMutation(AddPlanQuery);
-  const planExists = props.data.plans.length > 0;
+const EnsurePlanExists = ({ data }) => {
+  const [mutatePlan, { loading, mutationData }] = useMutation(ADD_PLAN);
+  const planExists = data.plans.length > 0;
 
   if (planExists) {
-    return <Today initialPlan={props.data} />;
+    return <Now plans={data.plans} />;
   }
 
   useEffect(() => {
@@ -21,12 +22,19 @@ const EnsurePlanExists = (props) => {
     return '<div> Loading</div>';
   }
 
-  if (data) {
-    const plans = { plans: [data.plans] }
-    return <Today initialPlan={plans} />;
+  if (mutationData) {
+    return <Now plans={mutationData.plans} />;
   }
 
   return null;
 };
 
-export default EnsurePlanExists;
+const EnsurePlanExistsQuery = (props) => {
+  return (
+    <HandleQuery query={getPlan()}>
+      {(data) => (<EnsurePlanExists data={data} />)}
+    </HandleQuery>
+  );
+};
+
+export { EnsurePlanExistsQuery as default, EnsurePlanExists };

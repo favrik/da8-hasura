@@ -67,6 +67,7 @@ function Layout({ children }) {
             display: grid;
             gap: 0px;
             grid-template-columns: repeat(auto-fill, minmax(8em, 1fr));
+            margin-bottom: 0;
           }
 
           li {

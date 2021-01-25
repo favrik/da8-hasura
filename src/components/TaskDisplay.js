@@ -20,7 +20,6 @@ const TaskDisplay = ({ tasks, selectedItem, editMode, handleEdit }) => {
     }
   }, []);
 
-
   const tasksByLevel = (items) => {
     return items.map((item, index) => {
       const selectedClass = selectedItem.id === item.id ? 'selected' : '';
