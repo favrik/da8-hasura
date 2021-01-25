@@ -3,6 +3,7 @@
 ## ToDo
 
 ## Roadmap
+* Drag and drop of tasks! (to change level, and reorder; could be keyboard shortcut based or mouse based)
 
 ---
 
