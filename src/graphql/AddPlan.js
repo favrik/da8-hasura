@@ -1,4 +1,7 @@
 import { gql } from '@apollo/client';
+import { GET_PLAN } from './GetPlan';
+import isoDate from '../lib/date';
+
 
 const ADD_PLAN = gql`
 mutation UpsertPlan($object: plans_insert_input!) {
@@ -24,4 +27,22 @@ mutation UpsertPlan($object: plans_insert_input!) {
 }
 `;
 
-export { ADD_PLAN as default };
+const updateCache = (proxy, something) => {
+  const currentDate = isoDate();
+  const data = proxy.readQuery({ query: GET_PLAN, variables: { today: currentDate } });
+
+  console.info('something');
+  console.log(something);
+
+
+  proxy.writeQuery({
+    query: GET_PLAN,
+    data: {
+      plans: [ something.data.plans ]
+    },
+    variables: { today: currentDate }
+  });
+};
+
+
+export { ADD_PLAN as default, updateCache };

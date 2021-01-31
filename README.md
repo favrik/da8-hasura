@@ -2,6 +2,9 @@
 
 ## ToDo
 
+## Bugs
+- If plan doesn't exist, make sure cache is updated after addPlan mutation
+
 ## Roadmap
 * Drag and drop of tasks! (to change level, and reorder; could be keyboard shortcut based or mouse based)
 
