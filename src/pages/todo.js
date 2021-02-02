@@ -4,10 +4,8 @@ import getPlan from '../graphql/GetPlan';
 
 
 export default function Index() {
-  const { loading, data, error } = getPlan();
-
   return (
-    <HandleQuery loading={loading} error={error}>
+    <HandleQuery query={getPlan()}>
       <EnsurePlanExists data={data} />
     </HandleQuery>
   );

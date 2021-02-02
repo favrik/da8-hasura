@@ -5,8 +5,7 @@ import CurrentDate from './CurrentDate';
 import KeyboardHelper from './KeyboardHelper';
 import DA8, { itemNavigator } from '../lib/DA8';
 
-const Now = ({ plans }) => {
-  const plan = plans && plans.length ? plans[0] : null;
+const PlanWorkspace = ({ plan }) => {
   const [selectedItem, setSelectedItem] = useState({ id: null });
   const [editing, setEditing] = useState(false);
 
@@ -48,4 +47,4 @@ const Now = ({ plans }) => {
   );
 };
 
-export { Now };
+export { PlanWorkspace };

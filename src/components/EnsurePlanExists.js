@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import ADD_PLAN, { updateCache } from '../graphql/AddPlan';
-import getPlan, { GET_PLAN } from '../graphql/GetPlan';
-import isoDate from '../lib/date';
 import { useMutation } from "@apollo/client";
-import { Now } from '../components/Now';
+
+import ADD_PLAN, { updateCache } from '../graphql/AddPlan';
+import getPlan from '../graphql/GetPlan';
+import isoDate from '../lib/date';
+import { PlanWorkspace } from '../components/PlanWorkspace';
 import HandleQuery from '../components/HandleQuery';
 
 const EnsurePlanExists = ({ data }) => {
   const [mutatePlan, mutationResult] = useMutation(ADD_PLAN);
   const planExists = data.plans.length > 0;
 
-  console.log(planExists);
   useEffect(() => {
     if (!planExists) {
       mutatePlan({
@@ -27,15 +27,12 @@ const EnsurePlanExists = ({ data }) => {
     return '<div> Loading</div>';
   }
 
-  console.log(mutationResult);
   if (mutationResult.data) {
-    return <Now plans={[mutationResult.data.plans]} />;
+    return <PlanWorkspace plan={mutationResult.data.plans} />;
   }
 
   if (planExists) {
-    return (
-      <Now plans={data.plans} />
-    );
+    return <PlanWorkspace plan={data.plans[0]} />;
   }
 
   return null;
